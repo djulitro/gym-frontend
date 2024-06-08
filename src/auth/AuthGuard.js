@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 // components
-import LoadingScreen from '../components/loading-screen';
+import LoadingScreen from '../components/LoadingScreen';
 //
 import Login from '../pages/LoginPage';
 import { useAuthContext } from './useAuthContext';

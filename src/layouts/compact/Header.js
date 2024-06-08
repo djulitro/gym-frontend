@@ -7,7 +7,7 @@ import { HEADER } from '../../config-global';
 // utils
 import { bgBlur } from '../../utils/cssStyles';
 // components
-import Logo from '../../components/logo';
+import Logo from '../../components/Logo';
 
 // ----------------------------------------------------------------------
 

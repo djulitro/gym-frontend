@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 // @mui
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
@@ -21,17 +22,30 @@ const StyledRoot = styled('div')(({ theme }) => ({
 export default function NavAccount() {
   const { user } = useAuthContext();
 
+  const [nameComplete, setNameComplete] = useState('');
+  const [role, setRole] = useState('');
+
+  useEffect(() => {
+    if (user.admin) {
+      setNameComplete(`${user.admin.name} ${user.admin.last_name}`);
+      setRole('Administrador');
+    } else {
+      setNameComplete(`${user.client.name} ${user.client.last_name}`);
+      setRole('');
+    }
+  }, [user]);
+
   return (
     <StyledRoot>
-      <CustomAvatar src={user?.photoURL} alt={user?.displayName} name={user?.displayName} />
+      <CustomAvatar src={user?.photoURL} alt={nameComplete} name={nameComplete} />
 
       <Box sx={{ ml: 2, minWidth: 0 }}>
         <Typography variant="subtitle2" noWrap>
-          {user?.displayName}
+          {nameComplete}
         </Typography>
 
         <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
-          {user?.role}
+          {role}
         </Typography>
       </Box>
     </StyledRoot>

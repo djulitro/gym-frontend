@@ -21,7 +21,7 @@ import ThemeLocalization from './locales';
 import SnackbarProvider from './components/snackbar';
 import { ThemeSettings, SettingsProvider } from './components/settings';
 import { MotionLazyContainer } from './components/animate';
-import ScrollToTop from './components/scroll-to-top';
+import ScrollToTop from './components/ScrollToTop';
 
 // Check our docs
 // https://docs.minimals.cc/authentication/js-version

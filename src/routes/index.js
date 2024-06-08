@@ -1,4 +1,7 @@
 import { Navigate, useRoutes } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
+// components
+
 // auth
 import AuthGuard from '../auth/AuthGuard';
 import GuestGuard from '../auth/GuestGuard';
@@ -7,17 +10,19 @@ import CompactLayout from '../layouts/compact';
 import DashboardLayout from '../layouts/dashboard';
 // config
 import { PATH_AFTER_LOGIN } from '../config-global';
+// Components
+import LoadingScreen from '../components/LoadingScreen';
 //
-import {
-  Page404,
-  PageOne,
-  PageTwo,
-  PageSix,
-  PageFour,
-  PageFive,
-  LoginPage,
-  PageThree,
-} from './elements';
+
+// ----------------------------------------------------------------------
+
+
+const Loadable = (Component) => (props) =>
+  (
+    <Suspense fallback={<LoadingScreen />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
 // ----------------------------------------------------------------------
 
@@ -46,16 +51,16 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'one', element: <PageOne /> },
-        { path: 'two', element: <PageTwo /> },
-        { path: 'three', element: <PageThree /> },
+        // { path: 'two', element: <PageTwo /> },
+        // { path: 'three', element: <PageThree /> },
         {
           path: 'user',
           children: [
             { element: <Navigate to="/dashboard/user/four" replace />, index: true },
-            { path: 'four', element: <PageFour /> },
-            { path: 'five', element: <PageFive /> },
-            { path: 'six', element: <PageSix /> },
+            { path: 'admin', element: <AdminPage /> },
+            // { path: 'four', element: <PageFour /> },
+            // { path: 'five', element: <PageFive /> },
+            // { path: 'six', element: <PageSix /> },
           ],
         },
       ],
@@ -67,3 +72,8 @@ export default function Router() {
     { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }
+
+
+const LoginPage = Loadable(lazy(() => import('../pages/LoginPage')));
+const AdminPage = Loadable(lazy(() => import('../pages/users/admins')))
+const Page404 = Loadable(lazy(() => import('../pages/Page404')));

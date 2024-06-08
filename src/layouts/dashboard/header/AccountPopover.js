@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { alpha } from '@mui/material/styles';
@@ -34,6 +34,7 @@ const OPTIONS = [
 
 export default function AccountPopover() {
   const navigate = useNavigate();
+  const [nameComplete, setNameComplete] = useState('');
 
   const { user, logout } = useAuthContext();
 
@@ -65,6 +66,14 @@ export default function AccountPopover() {
     navigate(path);
   };
 
+  useEffect(() => {
+    if (user.admin) {
+      setNameComplete(`${user.admin.name} ${user.admin.last_name}`);
+    } else {
+      setNameComplete(`${user.client.name} ${user.client.last_name}`);
+    }
+  }, [user])
+
   return (
     <>
       <IconButtonAnimate
@@ -84,13 +93,22 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <CustomAvatar src={user?.photoURL} alt={user?.displayName} name={user?.displayName} />
+        <CustomAvatar src={user?.photoURL} alt={nameComplete} name={nameComplete} />
       </IconButtonAnimate>
 
-      <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 200, p: 0 }}>
+      <MenuPopover open={openPopover} onClose={handleClosePopover} 
+        sx={{ 
+          p: 0,
+          mt: 1.5,
+          ml: 0.75,
+          '& .MuiMenuItem-root': {
+            typography: 'body2',
+            borderRadius: 0.75,
+          },
+        }}>
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {nameComplete}
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>

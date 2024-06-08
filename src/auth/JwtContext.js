@@ -72,22 +72,32 @@ export function AuthProvider({ children }) {
     try {
       const currentSession = storageAvailable ? localStorage.getItem('sessions') : '';
 
-      const { token, user, expiredAt } = JSON.parse(currentSession);
-
-      if (token && isValidToken(expiredAt)) {
-        setSession({
-          token,
-          user,
-          expiredAt
-        });
-
-        dispatch({
-          type: 'INITIAL',
-          payload: {
-            isAuthenticated: true,
+      if(currentSession) {
+        const { token, user, expiredAt } = JSON.parse(currentSession);
+  
+        if (token && isValidToken(expiredAt)) {
+          setSession({
+            token,
             user,
-          },
-        });
+            expiredAt
+          });
+  
+          dispatch({
+            type: 'INITIAL',
+            payload: {
+              isAuthenticated: true,
+              user,
+            },
+          });
+        } else {
+          dispatch({
+            type: 'INITIAL',
+            payload: {
+              isAuthenticated: false,
+              user: null,
+            },
+          });
+        }
       } else {
         dispatch({
           type: 'INITIAL',
@@ -156,7 +166,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   // LOGOUT
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    await axios.post('/api/logout');
     setSession(null);
     dispatch({
       type: 'LOGOUT',
